@@ -152,8 +152,18 @@ public class frmPet extends javax.swing.JFrame {
         });
 
         btnCatSearch.setText("Search");
+        btnCatSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCatSearchActionPerformed(evt);
+            }
+        });
 
         btnCatEdit.setText("Edit");
+        btnCatEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCatEditActionPerformed(evt);
+            }
+        });
 
         btnCatRemove.setText("Eliminar");
 
@@ -434,29 +444,14 @@ public class frmPet extends javax.swing.JFrame {
 
         String code = txtDogCode.getText();
         boolean found = false;
-        for (clsDog dog : dogObjectList) {
-            if(dog.getCode().equals(code)){
-                String name = txtDogName.getText();
-                String color = txtDogColor.getText();
-                int bornYear = Integer.parseInt(txtDogBornYear.getText());
-                String breed = comboDogBreed.getSelectedItem().toString();
-                String healthStatus = comboDogHealthStatus.getSelectedItem().toString();
-                boolean pedigree = checkDogPedigree.isSelected();
-                
-                dog.setName(name);
-                dog.setColor(color);
-                dog.setBreed(breed);
-                dog.setBornYear(bornYear);
-                dog.setHealthStatus(healthStatus);
-                dog.setPedigree(pedigree);
-                JOptionPane.showMessageDialog(this, "Record update successfuly");
-                this.clearDogFields();
-                this.FillJlist();
-                
-                found = true;
-                break;
-           }
-            
+        clsDog dogg = (clsDog) ctlpet.SearchPet(code, "Perro");
+        if (dogg != null){
+            ctlpet.EditPet(dogg);
+            this.clearDogFields();
+            this.FillJlist();
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Code not found   ");
         }
         
     }//GEN-LAST:event_btnDogEditActionPerformed
@@ -487,6 +482,7 @@ public class frmPet extends javax.swing.JFrame {
     private void btnDogCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDogCreateActionPerformed
         // TODO add your handling code here:
         //JOptionPane.showMessageDialog(this, "Holi");
+       
         
         try {
         String code = txtDogCode.getText();
@@ -500,9 +496,12 @@ public class frmPet extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Fill all fields");
         }else{
             clsDog dog = new clsDog(breed, pedigree, code, name, bornYear, color, healthStatus);
+            ctlpet.CreatePet(dog);
             dogObjectList.add(dog);
             this.FillJlist();
+            this.clearDogFields();
             JOptionPane.showMessageDialog(this, "The record has been saved");
+            
         }
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, "Please add a valid born year");
@@ -543,6 +542,8 @@ public class frmPet extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         String code = txtDogCode.getText();
+        
+        
         clsDog dog = (clsDog) ctlpet.SearchPet(code, "Perro");
         if(dog == null){
             JOptionPane.showMessageDialog(this, "Code not found");
@@ -554,23 +555,9 @@ public class frmPet extends javax.swing.JFrame {
                 comboDogHealthStatus.setSelectedItem(dog.getHealthStatus());
                 checkDogPedigree.setSelected(dog.isPedigree());
         }
-        /*boolean found = false;
-        for (clsDog dog : dogObjectList) {
-            if(dog.getCode().equals(code)){
-                txtDogName.setText(dog.getName());
-                txtDogBornYear.setText(dog.getBornYear() + "");
-                txtDogColor.setText(dog.getColor());
-                comboDogBreed.setSelectedItem(dog.getBreed());
-                comboDogHealthStatus.setSelectedItem(dog.getHealthStatus());
-                checkDogPedigree.setSelected(dog.isPedigree());
-                found = true;
-                break;
-           }
-            
-        }
-        if(!found){
-            JOptionPane.showMessageDialog(this, "Code not foundx    ");
-        }*/
+        
+        
+        
         
         
         
@@ -580,21 +567,25 @@ public class frmPet extends javax.swing.JFrame {
     private void btnDogRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDogRemoveActionPerformed
         // TODO add your handling code here:
         String code = txtDogCode.getText();
-        boolean found = false;
-        for (clsDog dog : dogObjectList) {
-            if(dog.getCode().equals(code)){
-                this.dogObjectList.remove(dog);
-                JOptionPane.showMessageDialog(this, "Record remove successfuly");
-                this.clearDogFields();
-                this.FillJlist();
-                
-                found = true;
-                break;
-           }
-            
+        try{
+        clsDog dog = (clsDog) ctlpet.SearchPet(code, "Perro");
+        ctlpet.DeletePet(dog);
+        this.clearDogFields();
+        this.FillJlist();
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Code not found   ");
         }
         
     }//GEN-LAST:event_btnDogRemoveActionPerformed
+ 
+    private void btnCatSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCatSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCatSearchActionPerformed
+
+    private void btnCatEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCatEditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCatEditActionPerformed
 
     /**
      * @param args the command line arguments
